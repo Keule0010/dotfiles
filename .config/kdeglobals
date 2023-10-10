@@ -1,0 +1,14 @@
+[$Version]
+update_info=filepicker.upd:filepicker-remove-old-previews-entry
+
+[General]
+TerminalApplication=kitty
+
+[KDE]
+ShowDeleteCommand=true
+
+[KShortcutsDialog Settings]
+Dialog Size=600,480
+
+[PreviewSettings]
+MaximumRemoteSize=0

@@ -1,0 +1,117 @@
+/*
+*
+* Catppuccin Frappe palette
+* Maintainer: rubyowo
+*
+*/
+
+$base:      #303446;
+$mantle:    #292c3c;
+$crust:     #232634;
+
+$text:      #c6d0f5;
+$subtext0:  #a5adce;
+$subtext1:  #b5bfe2;
+
+$surface0:  #414559;
+$surface1:  #51576d;
+$surface2:  #626880;
+
+$overlay0:  #737994;
+$overlay1:  #838ba7;
+$overlay2:  #949cbb;
+
+$blue:      #8caaee;
+$lavender:  #babbf1;
+$sapphire:  #85c1dc;
+$sky:       #99d1db;
+$teal:      #81c8be;
+$green:     #a6d189;
+$yellow:    #e5c890;
+$peach:     #ef9f76;
+$maroon:    #ea999c;
+$red:       #e78284;
+$mauve:     #ca9ee6;
+$pink:      #f4b8e4;
+$flamingo:  #eebebe;
+$rosewater: #f2d5cf;
+
+/* 
+ * Author: Keule2
+ * Created: 23.09.2023
+ */
+
+/*****************/
+/*    Defaults   */
+/*****************/
+* {
+    border: none;
+    border-radius: 5px;
+    font-family: "FiraCode Nerd Font Mono";
+    font-weight: bold;
+    font-size: 13px;
+    color: $text;
+}
+
+window {
+    background: transparent;
+}
+
+tooltip{
+    background: $surface0;
+    border: solid 2px $sapphire;
+}
+
+button {
+    padding: 2px;
+    margin: 4px 2px;
+}
+
+.widget {
+    border: solid 2px $sapphire;
+    background: $surface1;
+    padding: 0px 5px;
+    margin: 2px;
+    box-shadow: none; 
+}
+
+/*****************/
+/*      Root     */
+/*****************/
+.bar1, .bar2, .bar3{
+    background-color: $surface0;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+}
+
+.root {
+    margin: 2px;
+    padding: 2px;
+}
+
+/*****************/
+/* Cutom widgets */
+/*****************/
+/* Player */
+.Playing {
+    color: $sapphire;
+}
+
+/* Session */
+.session {
+    font-size: 24px;
+}
+
+/* Workspaces */
+.workspace_entry {
+    padding: 2px 5px;
+    margin: 2px;
+}
+
+.workspace_entry.current {
+    background: $overlay0;
+}
+
+.workspace_entry_p:hover .workspace_entry{
+    background: $overlay2;
+}

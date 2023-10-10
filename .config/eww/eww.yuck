@@ -1,0 +1,190 @@
+;; TODO Update workspaces only when workspaces updated
+;; TODO Camera access, Microphone access,.... -> indicator-mic-cam
+(defwindow bar1
+    :monitor 0
+    :geometry (geometry :x "0%"
+                        :y "0px"
+                        :width "100%"
+                        :height "35px"
+                        :anchor "top center")
+    :stacking "fg"
+    :exclusive true
+    :focusable false
+
+    (content)
+)
+
+(defwindow bar2
+    :monitor 1
+    :geometry (geometry :x "0%"
+                        :y "0px"
+                        :width "100%"
+                        :height "35px"
+                        :anchor "top center")
+    :stacking "fg"
+    :exclusive true
+    :focusable false
+
+    (content)
+)
+
+(defwindow bar3
+    :monitor 2
+    :geometry (geometry :x "0%"
+                        :y "0px"
+                        :width "100%"
+                        :height "35px"
+                        :anchor "top center")
+    :stacking "fg"
+    :exclusive true
+    :focusable false
+
+    (content)
+)
+
+
+(defwidget content []
+    (centerbox :orientation "h" :class "root"
+        (box :space-evenly false :halign "start"
+            (workspaces)
+            (window_w)
+        )
+        (time :halign "center")
+        (box :space-evenly false :halign "end" 
+            (systray :class "widget systray")
+            (player)
+            (cpu)
+            (memory)
+            (network)
+            (audio)
+            (session)
+        )
+    )
+)
+
+
+
+;;PLAYER
+(deflisten MUSIC :initial "" "playerctl -a metadata --follow --format '{\"text\":\"{{artist}} - {{markup_escape(title)}}\", \"state\":\"{{status}}\"}' || true")
+(defwidget player []
+    (box :class "widget"
+        (eventbox 
+            :onclick "playerctl play-pause"
+            :onmiddleclick "playerctl previous"
+            :onrightclick "playerctl next"
+            (label :tooltip "${MUSIC.text}" :class "${MUSIC.state}" :text "󰒮 󰐌 󰒭")
+        )
+    )
+)
+
+;;CPU
+(defwidget cpu []
+    (box :class "widget"
+        (label :text "${round(EWW_CPU.avg, 0)}% ")
+    )
+)
+
+;;Memory
+(defwidget memory []
+    (box :class "widget"
+        (label :text "${round(EWW_RAM.used_mem / (1024*1024*1024), 1)} " :tooltip "${round(EWW_RAM.used_mem_perc, 0)}%")
+    )
+)
+
+;;Network
+(defpoll NET_NAME :interval "10s" "~/.config/eww/scripts/net.sh ssid")
+(defpoll IS_WIRELESS :interval "10s" "~/.config/eww/scripts/net.sh iswlan")
+(defwidget network []
+    (box :class "widget"
+        (eventbox :onclick "nm-connection-editor & disown"
+            (label :text "${round(EWW_NET["enp6s0"].NET_UP / 1000, 1)}kB/s⇡ ${round(EWW_NET["enp6s0"].NET_DOWN / 1000, 1)}kB/s⇣ ${IS_WIRELESS? "" : ""}" :tooltip "${IS_WIRELESS? NET_NAME : ""}")
+        )
+    )
+)
+
+;;Audio
+(defpoll DEF_SINK :interval "10s" "~/.config/eww/scripts/audio.sh getdefaultsink")
+(defpoll IS_MUTED_SOURCE :interval "10s" "~/.config/eww/scripts/audio.sh ismutedsource @DEFAULT_SOURCE@")
+(defpoll IS_MUTED_SINK :interval "10s" "~/.config/eww/scripts/audio.sh ismutedsink @DEFAULT_SINK@")
+(defpoll IS_BLUE :interval "10s" "~/.config/eww/scripts/audio.sh isblue @DEFAULT_SINK@")
+(defpoll VOLUME_SOURCE :interval "10s" "~/.config/eww/scripts/audio.sh getvol @DEFAULT_SOURCE@")
+(defpoll VOLUME_SINK :interval "10s" "~/.config/eww/scripts/audio.sh getvol @DEFAULT_SINK@")
+(defwidget audio []
+    (box :class "widget"
+        (eventbox 
+            :onclick "${EWW_CMD} open audio_popup"
+            :onmiddleclick "~/.config/eww/scripts/audio.sh mutesink @DEFAULT_SINK@"
+            :onrightclick "~/.config/eww/scripts/audio.sh mutesource @DEFAULT_SOURCE@"
+            :onscroll "~/.config/eww/scripts/audio.sh vol {}"
+
+            (label :text "${IS_MUTED_SINK? " ": "${round(VOLUME_SINK * 100, 0)}%"}${IS_BLUE? "" : ""} ${IS_MUTED_SOURCE? "" : "${round(VOLUME_SOURCE * 100, 0)}%"}"
+                :tooltip "${DEF_SINK}"
+            )
+        )
+    )
+)
+
+(defwindow audio_popup 
+    :monitor 0
+    :exclusive "false"
+    :stacking "overlay"
+    :geometry (geometry :anchor "top right")
+    (audio_menu)
+)
+
+(defpoll audio_device :interval "10s" "~/.config/eww/scripts/audio.sh getdevices")
+(defwidget audio_menu []
+   (eventbox :onhoverlost "${EWW_CMD} close audio_popup" 
+        (box :class "widget" :orientation "v"
+            (for dev in audio_device
+                (button :onclick "pactl set-default-sink ${dev.id} & ${EWW_CMD} close audio_popup"
+                    (label :text "${dev.name == DEF_SINK? "" : ""} ${dev.name}")
+                )
+            )
+        )
+    ) 
+)
+
+;;Session
+(defwidget session []
+    (box :class "widget"
+        (eventbox :onclick "swaync-client -t -sw"
+            (label :class "session" :text "")
+        )
+    )
+)
+
+;; Time/Date
+(defpoll TIME :interval "5s" `date +\"%H:%M\"`)
+(defpoll DATE :interval "1m" `date +\"%d.%m.%Y\"`)
+
+(defwidget time []
+    (box :class "widget" :space-evenly false
+        (eventbox :onclick "merkuro-calendar & disown"
+            (label :text "${TIME}   ${DATE} ")
+        )
+    )
+)
+
+;; Active Window Title
+(deflisten window :initial "..." "sh ~/.config/eww/scripts/get_window_title.sh")
+(defwidget window_w []
+    (box :class "widget" :visible {window != ""}
+        (label :limit-width  85 :text "${window}")
+    )
+)
+
+;; Workspaces
+(deflisten workspaces :initial "[]" "bash ~/.config/eww/scripts/get_workspaces.sh")
+(deflisten current_workspace :initial "1" "bash ~/.config/eww/scripts/get_active_workspace.sh")
+(defwidget workspaces []
+    (box :class "widget workspaces" :space-evenly false
+        (for workspace in workspaces
+            (eventbox :onclick "hyprctl dispatch workspace ${workspace.id}" :class "workspace_entry_p"
+                (box :class "workspace_entry ${workspace.id == current_workspace ? "current" : ""} ${workspace.windows > 0 ? "occupied" : "empty"}"
+                    (label :class "test" :text "${workspace.id}")
+                )
+            )
+        )
+    )
+)
