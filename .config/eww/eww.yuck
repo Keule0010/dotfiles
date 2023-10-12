@@ -92,12 +92,13 @@
 )
 
 ;;Network
-(defpoll NET_NAME :interval "10s" "~/.config/eww/scripts/net.sh ssid")
 (defpoll IS_WIRELESS :interval "10s" "~/.config/eww/scripts/net.sh iswlan")
+(defpoll NET_INT :interval "10s" "~/.config/eww/scripts/net.sh getint")
+(defpoll NET_NAME :interval "10s" "~/.config/eww/scripts/net.sh ssid")
 (defwidget network []
     (box :class "widget"
         (eventbox :onclick "nm-connection-editor & disown"
-            (label :text "${round(EWW_NET["enp6s0"].NET_UP / 1000, 1)}kB/s⇡ ${round(EWW_NET["enp6s0"].NET_DOWN / 1000, 1)}kB/s⇣ ${IS_WIRELESS? "" : ""}" :tooltip "${IS_WIRELESS? NET_NAME : ""}")
+            (label :text "${round(EWW_NET[NET_INT].NET_UP / 1000, 1)}kB/s⇡ ${round(EWW_NET[NET_INT].NET_DOWN / 1000, 1)}kB/s⇣ ${IS_WIRELESS? "" : ""}" :tooltip "${NET_INT} ${IS_WIRELESS? ":${NET_NAME}" : ""}")
         )
     )
 )

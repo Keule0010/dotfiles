@@ -11,7 +11,7 @@ if [ -z $1 ]; then
 fi
 
 
-islowest() {
+getlowest() {
     lines=$(ip route | grep default)
 
     # Initialize variables to store the highest metric and interface
@@ -29,7 +29,11 @@ islowest() {
         fi
     done <<< "$lines"
 
-    if [ "$lowest_interface" == "$1" ]; then
+    echo "$lowest_interface"
+}
+
+islowest() {
+    if [ "$(getlowest)" == "$1" ]; then
         echo "true"
     else
         echo "false"
@@ -50,6 +54,8 @@ if [ "$1" == "iswlan" ]; then
     iswlan
 elif [ "$1" == "islowest" ]; then
     islowest $2
+elif [ "$1" == "getint" ]; then
+    getlowest
 elif [ "$1" == "ssid" ]; then
     nmcli -t -f active,ssid dev wifi | grep -m 1 yes | awk -F: '{print $2}'
 else

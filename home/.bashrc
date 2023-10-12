@@ -17,8 +17,19 @@ if  [ -x /usr/bin/starship ]; then
     unset -f __main
 fi
 
-# Advanced command-not-found hook
-source /usr/share/doc/find-the-command/ftc.bash
+## Aliases
+# Replace ls with exa
+alias ls='exa -al --color=always --group-directories-first' # preferred listing
+alias la='exa -a --color=always --group-directories-first'  # all files and dirs
+alias ll='exa -l --color=always --group-directories-first'  # long format
+alias lt='exa -aT --color=always --group-directories-first' # tree listing
+alias l.='exa -ald --color=always --group-directories-first .*' # show only dotfiles
+
+# Replace cat with bat
+alias cat='bat --style header --style snip --style changes --style header'
+
+# Replace yay with paru
+[ ! -x /usr/bin/yay ] && [ -x /usr/bin/paru ] && alias yay='paru'
 
 # Aliases
 alias cls='clear'
@@ -47,4 +58,3 @@ alias jctl="journalctl -p 3 -xb"
 
 # Recent installed packages
 alias rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
-. "$HOME/.cargo/env"

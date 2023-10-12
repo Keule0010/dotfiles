@@ -15,7 +15,7 @@ TODO
 | hyprshade | Night light |
 | swaync | Notification daemon with history panle |
 | rofi-lbonn-wayland | App launcher |
-| eww-wayland-systray-git | Status bar |
+| eww-tray-wayland-git | Status bar |
 | swww| Wallpaper |
 | swaylock-effects | Lockscreen |
 | swayidle | Idle daemon |
