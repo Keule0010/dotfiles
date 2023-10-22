@@ -1,0 +1,3 @@
+action = copy
+files = [emojis, gitmoji, hebrew, fontawesome6, math]
+skin-tone=ask

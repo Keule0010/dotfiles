@@ -2,7 +2,6 @@
 configuration {
     modi:                        "drun";
     show-icons:                  false;
-    font:                        "FiraCode Nerd Font Mono 9";
 }
 
 // Theme //
@@ -10,8 +9,9 @@ configuration {
 
 // Main //
 window {
-    height:                      55%;
+    height:                      50%;
     width:                       20%;
+    location:                    center;
     transparency:                "real";
     fullscreen:                  false;
     enabled:                     true;
@@ -29,7 +29,6 @@ mainbox {
     orientation:                 vertical;
     children:                    [ "inputbar" , "listbox" ];
     background-color:            transparent;
-    //background-image:            url("~/Data/Pictures/Backgrounds/Desktop/Ghosts.jpg", both);
 }
 
 

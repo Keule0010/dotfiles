@@ -114,6 +114,11 @@ echo "Installing packages..."
 for pkg_file in *.pkgs; do 
     [ -f "$pkg_file" ] || continue
     echo "Found package file: $pkg_file"
+    read -p "Do you want to install the packages from this file(Y/n)?" inst 
+
+    if [ "$inst" == "n" ]; then
+        continue
+    fi
 
     while IFS= read -r pkg; do
         if [[ $pkg = \#* ]] || [ -z "$pkg" ]; then
@@ -121,7 +126,7 @@ for pkg_file in *.pkgs; do
         fi
 
         if is_installed $pkg; then
-            echo "package: already installed, ignoring [$pkg]"
+            echo "info: package already installed, ignoring [$pkg]"
         elif is_arch_pkg $pkg; then
             arch_pkgs="${arch_pkgs} $pkg"
         elif is_aur_pkg $pkg; then
@@ -144,6 +149,7 @@ if [ ! -z "$aur_pkgs" ]; then
     $helper -Sy $aur_pkgs
 fi
 
+# TODO mic-indicator, nerd font
 echo "Packages installed!"
 
 # Apply default configs
@@ -156,9 +162,9 @@ if [ "$1" != "nc" ]; then
     echo "Configs copied!"
 fi
 
-# Set theme
+#TODO Set theme
 
-# Enable services
+#TODO Enable services
 # cups (is_isnstalled $pkg -> ask? -> enable)
 # bluetooth
 # sddm

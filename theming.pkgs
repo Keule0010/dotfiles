@@ -1,0 +1,27 @@
+# Theming
+nwg-look
+kvantum
+qt5ct
+
+# Fonts
+noto-fonts
+noto-fonts-cjk
+noto-fonts-emoji
+ttf-font-awesome
+ttf-firacode-nerd
+#nerd-fonts
+
+# Icon Themes
+papirus-icon-theme
+xcursor-breeze
+
+# Themes
+catppuccin-gtk-theme-frappe
+catppuccin-gtk-theme-latte
+catppuccin-gtk-theme-macchiato
+catppuccin-gtk-theme-mocha
+
+# Dependencies
+qt5-graphicaleffects
+qt5-quickcontrols2
+qt5-svg

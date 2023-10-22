@@ -56,13 +56,12 @@
             (cpu)
             (memory)
             (network)
+            (battery)
             (audio)
             (session)
         )
     )
 )
-
-
 
 ;;PLAYER
 (deflisten MUSIC :initial "" "playerctl -a metadata --follow --format '{\"text\":\"{{artist}} - {{markup_escape(title)}}\", \"state\":\"{{status}}\"}' || true")
@@ -99,6 +98,32 @@
     (box :class "widget"
         (eventbox :onclick "nm-connection-editor & disown"
             (label :text "${round(EWW_NET[NET_INT].NET_UP / 1000, 1)}kB/s⇡ ${round(EWW_NET[NET_INT].NET_DOWN / 1000, 1)}kB/s⇣ ${IS_WIRELESS? "" : ""}" :tooltip "${NET_INT} ${IS_WIRELESS? ":${NET_NAME}" : ""}")
+        )
+    )
+)
+
+(defpoll BAT_INFO :interval "1m" "~/.config/eww/scripts/battery.sh")
+(defwidget battery []
+    (box :class "widget" :visible "${BAT_INFO.has_battery}"
+        (label :text "${BAT_INFO.percentage}"
+            :tooltip "${BAT_INFO.time_remaining}"
+        )
+    )
+)
+
+(defwindow battery_warning
+    :monitor 0
+    :exclusive "false"
+    :stacking "overlay"
+    :geometry (geometry :anchor "center"
+                        :width "10%"
+                        :height "10%")
+    (box :class "widget" :orientation "v"
+        (label :text "${BAT_INFO.percentage}!"
+            :tooltip "${BAT_INFO.time_remaining}"
+        )
+        (button :onclick "${EWW_CMD} close battery_warning"
+            (label :text "")
         )
     )
 )
